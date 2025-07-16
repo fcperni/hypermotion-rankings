@@ -4,8 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 
 team_name_map = {
-    "Andorra": "FC Andorra",
-    "Cadiz" : "Cádiz",
     "2Real Sociedad II": "Real Sociedad B"
     # Add more mappings if needed
 }
