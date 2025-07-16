@@ -3,6 +3,15 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+team_name_map = {
+    "2Real Sociedad II": "Real Sociedad B"
+    # Add more mappings if needed
+}
+
+def normalize_team_names(df, name_map):
+    df["team"] = df["team"].replace(name_map)
+    return df
+
 # --- Scrape actual standings from ESPN ---
 @st.cache_data
 def fetch_actual_standings():
@@ -62,21 +71,20 @@ uploaded_file = st.file_uploader("Upload your predictions.csv", type="csv")
 
 if uploaded_file:
     predictions_df = pd.read_csv(uploaded_file)
+    predictions_df = normalize_team_names(predictions_df, team_name_map)
 
     st.subheader("📥 Your Predictions")
     st.dataframe(predictions_df)
 
     st.subheader("📡 Fetching Actual La Liga Standings...")
-    actual_df = fetch_actual_standings()
-    st.dataframe(actual_df)
+    actual_standings_df = fetch_actual_standings()
+
+    actual_standings_df = normalize_team_names(actual_standings_df, team_name_map)
+    st.dataframe(actual_standings_df)
 
     st.subheader("🏁 Evaluation Results")
-    summary_df, detailed_df = evaluate_predictions(predictions_df, actual_df)
+    summary_df, detailed_df = evaluate_predictions(predictions_df, actual_standings_df)
     st.dataframe(summary_df.sort_values("exact_rank"))
 
     st.subheader("🔎 Detailed Comparison")
     st.dataframe(detailed_df.sort_values(["name", "actual_position"]))
-
-    # Optional: Downloads
-    st.download_button("📤 Download Summary CSV", summary_df.to_csv(index=False, encoding="utf-8-sig"), file_name="ranking_summary.csv")
-    st.download_button("📤 Download Detailed CSV", detailed_df.to_csv(index=False, encoding="utf-8-sig"), file_name="detailed_results.csv")
