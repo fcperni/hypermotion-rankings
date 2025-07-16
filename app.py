@@ -42,24 +42,24 @@ def fetch_actual_standings():
         teams.append(row.text[suffix_index:])
 
     df = pd.DataFrame({
-        "team": teams,
-        "actual_position": range(1, len(teams) + 1)
+        "equipo": teams,
+        "posicion_exacta": range(1, len(teams) + 1)
     })
 
     return df
 
 def evaluate_predictions(preds_df, rankings_df):
     merged = preds_df.merge(rankings_df, on="team", how="left")
-    merged["exact_match"] = merged["predicted_position"] == merged["actual_position"]
-    merged["abs_error"] = abs(merged["predicted_position"] - merged["actual_position"])
+    merged["posicion_exacta"] = merged["predicted_position"] == merged["posicion_exacta"]
+    merged["abs_error"] = abs(merged["predicted_position"] - merged["posicion_exacta"])
 
     summary = merged.groupby("name").agg({
-        "exact_match": "sum",
+        "posicion_exacta": "sum",
         "abs_error": "sum"
     }).reset_index()
 
-    summary["exact_rank"] = summary["exact_match"].rank(ascending=False, method="min")
-    summary["approx_rank"] = summary["abs_error"].rank(ascending=True, method="min")
+    summary["ranking_exacto"] = summary["posicion_exacta"].rank(ascending=False, method="min")
+    summary["ranking_aproximacion"] = summary["abs_error"].rank(ascending=True, method="min")
     return summary, merged
 
 # --- Streamlit UI ---
@@ -86,4 +86,4 @@ if uploaded_file:
     st.dataframe(summary_df.sort_values("exact_rank"))
 
     st.subheader("🔎 Comparativa Detallada")
-    st.dataframe(detailed_df.sort_values(["name", "actual_position"]))
+    st.dataframe(detailed_df.sort_values(["name", "posicion_exacta"]))
