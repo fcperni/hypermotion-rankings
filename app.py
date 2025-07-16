@@ -22,7 +22,7 @@ team_name_map = {
 }
 
 def normalize_team_names(df, name_map):
-    df["team"] = df["team"].replace(name_map)
+    df["Equipo"] = df["Equipo"].replace(name_map)
     return df
 
 # --- Scrape actual standings from ESPN ---
@@ -55,37 +55,37 @@ def fetch_actual_standings():
         teams.append(row.text[suffix_index:])
 
     df = pd.DataFrame({
-        "team": teams,
-        "actual_position": range(1, len(teams) + 1)
+        "Equipo": teams,
+        "Posición": range(1, len(teams) + 1)
     })
 
     return df
 
 def evaluate_predictions(preds_df, rankings_df):
-    merged = preds_df.merge(rankings_df, on="team", how="left")
-    merged["exact_match"] = merged["predicted_position"] == merged["actual_position"]
-    merged["abs_error"] = abs(merged["predicted_position"] - merged["actual_position"])
+    merged = preds_df.merge(rankings_df, on="Equipo", how="left")
+    merged["Posiciones exactas"] = merged["Predicción"] == merged["Posición"]
+    merged["Error absoluto"] = abs(merged["Predicción"] - merged["Posición"])
 
-    summary = merged.groupby("name").agg({
-        "exact_match": "sum",
-        "abs_error": "sum"
+    summary = merged.groupby("Nombre").agg({
+        "Posiciones exactas": "sum",
+        "Error absoluto": "sum"
     }).reset_index()
 
-    summary["exact_rank"] = summary["exact_match"].rank(ascending=False, method="min")
-    summary["approx_rank"] = summary["abs_error"].rank(ascending=True, method="min")
+    summary["Ranking exacto"] = summary["Posiciones exactas"].rank(ascending=False, method="min")
+    summary["Ranking aproximaciones"] = summary["Error absoluto"].rank(ascending=True, method="min")
     return summary, merged
 
 # --- Streamlit UI ---
-st.title("⚽ Predicciones de la Liga Hypermotion")
-st.write("Sube tus predicciones para ver cómo de exactas han sido.")
+st.title("⚽ Predicciónes de la Liga Hypermotion")
+st.write("Sube tus Predicciónes para ver cómo de exactas han sido.")
 
-uploaded_file = st.file_uploader("Sube tus predicciones.csv", type="csv")
+uploaded_file = st.file_uploader("Sube tus Predicciónes.csv", type="csv")
 
 if uploaded_file:
     predictions_df = pd.read_csv(uploaded_file)
     predictions_df = normalize_team_names(predictions_df, team_name_map)
 
-    st.subheader("📥 Tus predicciones:")
+    st.subheader("📥 Tus Predicciónes:")
     st.dataframe(predictions_df)
 
     st.subheader("📡 Obteniendo la clasificación de La Liga Hypermotion...")
@@ -96,7 +96,7 @@ if uploaded_file:
 
     st.subheader("🏁 Evaluación de Resultados")
     summary_df, detailed_df = evaluate_predictions(predictions_df, actual_standings_df)
-    st.dataframe(summary_df.sort_values("exact_rank"))
+    st.dataframe(summary_df.sort_values("Ranking exacto"))
 
     st.subheader("🔎 Comparativa Detallada")
-    st.dataframe(detailed_df.sort_values(["name", "actual_position"]))
+    st.dataframe(detailed_df.sort_values(["Nombre", "Posición"]))
