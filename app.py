@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 
 team_name_map = {
+    "Andorra": "FC Andorra",
+    "Cadiz" : "Cádiz",
     "2Real Sociedad II": "Real Sociedad B"
     # Add more mappings if needed
 }
@@ -48,7 +50,6 @@ def fetch_actual_standings():
 
     return df
 
-# --- Evaluation Logic ---
 def evaluate_predictions(preds_df, rankings_df):
     merged = preds_df.merge(rankings_df, on="team", how="left")
     merged["exact_match"] = merged["predicted_position"] == merged["actual_position"]
@@ -82,7 +83,7 @@ if uploaded_file:
     actual_standings_df = normalize_team_names(actual_standings_df, team_name_map)
     st.dataframe(actual_standings_df)
 
-    st.subheader("🏁 Evaluació de Resultados")
+    st.subheader("🏁 Evaluación de Resultados")
     summary_df, detailed_df = evaluate_predictions(predictions_df, actual_standings_df)
     st.dataframe(summary_df.sort_values("exact_rank"))
 
