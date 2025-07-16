@@ -64,27 +64,27 @@ def evaluate_predictions(preds_df, rankings_df):
     return summary, merged
 
 # --- Streamlit UI ---
-st.title("⚽ La Liga Predictions Ranking App")
-st.write("Upload your predictions and see how close you are to the real standings.")
+st.title("⚽ Predicciones de la Liga Hypermotion")
+st.write("Sube tus predicciones para ver cómo de exactas han sido.")
 
-uploaded_file = st.file_uploader("Upload your predictions.csv", type="csv")
+uploaded_file = st.file_uploader("Sube tus predicciones.csv", type="csv")
 
 if uploaded_file:
     predictions_df = pd.read_csv(uploaded_file)
     predictions_df = normalize_team_names(predictions_df, team_name_map)
 
-    st.subheader("📥 Your Predictions")
+    st.subheader("📥 Tus predicciones:")
     st.dataframe(predictions_df)
 
-    st.subheader("📡 Fetching Actual La Liga Standings...")
+    st.subheader("📡 Obteniendo la clasificación de La Liga Hypermotion...")
     actual_standings_df = fetch_actual_standings()
 
     actual_standings_df = normalize_team_names(actual_standings_df, team_name_map)
     st.dataframe(actual_standings_df)
 
-    st.subheader("🏁 Evaluation Results")
+    st.subheader("🏁 Evaluació de Resultados")
     summary_df, detailed_df = evaluate_predictions(predictions_df, actual_standings_df)
     st.dataframe(summary_df.sort_values("exact_rank"))
 
-    st.subheader("🔎 Detailed Comparison")
+    st.subheader("🔎 Comparativa Detallada")
     st.dataframe(detailed_df.sort_values(["name", "actual_position"]))
