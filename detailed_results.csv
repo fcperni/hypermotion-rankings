@@ -1,0 +1,45 @@
+name,team,predicted_position,actual_position,exact_match,abs_error
+Paco,Albacete,1,1,True,0
+Paco,Almería,2,2,True,0
+Paco,Burgos,3,3,True,0
+Paco,Castellón,4,4,True,0
+Paco,Ceuta,5,5,True,0
+Paco,Cultural Leonesa,6,6,True,0
+Paco,Cadiz,7,7,True,0
+Paco,Córdoba,8,8,True,0
+Paco,Deportivo La Coruña,9,9,True,0
+Paco,Eibar,10,10,True,0
+Paco,FC Andorra,11,11,True,0
+Paco,Granada,12,12,True,0
+Paco,Huesca,13,13,True,0
+Paco,Las Palmas,14,14,True,0
+Paco,Leganés,15,15,True,0
+Paco,Mirandés,16,16,True,0
+Paco,Málaga,17,17,True,0
+Paco,Racing Santander,18,18,True,0
+Paco,Real Sociedad B,19,19,True,0
+Paco,Real Valladolid,20,20,True,0
+Paco,Real Zaragoza,21,21,True,0
+Paco,Sporting Gijón,22,22,True,0
+Chuchi,Sporting Gijón,1,22,False,21
+Chuchi,Real Zaragoza,2,21,False,19
+Chuchi,Real Valladolid,3,20,False,17
+Chuchi,Real Sociedad B,4,19,False,15
+Chuchi,Racing Santander,5,18,False,13
+Chuchi,Mirandés,6,16,False,10
+Chuchi,Málaga,7,17,False,10
+Chuchi,Leganés,8,15,False,7
+Chuchi,Las Palmas,9,14,False,5
+Chuchi,Huesca,10,13,False,3
+Chuchi,Granada,11,12,False,1
+Chuchi,FC Andorra,12,11,False,1
+Chuchi,Eibar,13,10,False,3
+Chuchi,Deportivo La Coruña,14,9,False,5
+Chuchi,Cultural Leonesa,15,6,False,9
+Chuchi,Córdoba,16,8,False,8
+Chuchi,Ceuta,17,5,False,12
+Chuchi,Castellón,18,4,False,14
+Chuchi,Cadiz,19,7,False,12
+Chuchi,Burgos,20,3,False,17
+Chuchi,Almería,21,2,False,19
+Chuchi,Albacete,22,1,False,21
