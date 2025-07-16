@@ -9,16 +9,15 @@ team_name_map = {
     "Almeria": "Almería",
     "Castellon": "Castellón",
     "Cadiz": "Cádiz",
-"Cordoba": "Córdoba",
-"Deportivo": "Deportivo La Coruña",
+    "Cordoba": "Córdoba",
+    "Deportivo": "Deportivo La Coruña",
     "Leganes": "Leganés",
-"Mirandes": "Mirandés",
-"Malaga": "Málaga",
+    "Mirandes": "Mirandés",
+    "Malaga": "Málaga",
     "Zaragoza": "Real Zaragoza",
     "Valladolid": "Real Valladolid",
     "Sporting": "Sporting Gijón",
-"Sporting Gijon": "Sporting Gijón",
-
+    "Sporting Gijon": "Sporting Gijón"
     # Add more mappings if needed
 }
 
