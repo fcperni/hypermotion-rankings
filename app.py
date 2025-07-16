@@ -4,7 +4,21 @@ import requests
 from bs4 import BeautifulSoup
 
 team_name_map = {
-    "2Real Sociedad II": "Real Sociedad B"
+    "2Real Sociedad II": "Real Sociedad B",
+    "Andorra": "FC Andorra",
+    "Almeria": "Almería",
+    "Castellon": "Castellón",
+    "Cadiz": "Cádiz",
+"Cordoba": "Córdoba",
+"Deportivo": "Deportivo La Coruña",
+    "Leganes": "Leganés",
+"Mirandes": "Mirandés",
+"Malaga": "Málaga",
+    "Zaragoza": "Real Zaragoza",
+    "Valladolid": "Real Valladolid",
+    "Sporting": "Sporting Gijón",
+"Sporting Gijon": "Sporting Gijón",
+
     # Add more mappings if needed
 }
 
@@ -42,24 +56,24 @@ def fetch_actual_standings():
         teams.append(row.text[suffix_index:])
 
     df = pd.DataFrame({
-        "equipo": teams,
-        "posicion_exacta": range(1, len(teams) + 1)
+        "team": teams,
+        "actual_position": range(1, len(teams) + 1)
     })
 
     return df
 
 def evaluate_predictions(preds_df, rankings_df):
     merged = preds_df.merge(rankings_df, on="team", how="left")
-    merged["posicion_exacta"] = merged["predicted_position"] == merged["posicion_exacta"]
-    merged["abs_error"] = abs(merged["predicted_position"] - merged["posicion_exacta"])
+    merged["exact_match"] = merged["predicted_position"] == merged["actual_position"]
+    merged["abs_error"] = abs(merged["predicted_position"] - merged["actual_position"])
 
     summary = merged.groupby("name").agg({
-        "posicion_exacta": "sum",
+        "exact_match": "sum",
         "abs_error": "sum"
     }).reset_index()
 
-    summary["ranking_exacto"] = summary["posicion_exacta"].rank(ascending=False, method="min")
-    summary["ranking_aproximacion"] = summary["abs_error"].rank(ascending=True, method="min")
+    summary["exact_rank"] = summary["exact_match"].rank(ascending=False, method="min")
+    summary["approx_rank"] = summary["abs_error"].rank(ascending=True, method="min")
     return summary, merged
 
 # --- Streamlit UI ---
@@ -86,4 +100,4 @@ if uploaded_file:
     st.dataframe(summary_df.sort_values("exact_rank"))
 
     st.subheader("🔎 Comparativa Detallada")
-    st.dataframe(detailed_df.sort_values(["name", "posicion_exacta"]))
+    st.dataframe(detailed_df.sort_values(["name", "actual_position"]))
