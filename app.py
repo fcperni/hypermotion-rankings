@@ -25,6 +25,11 @@ def normalize_team_names(df, name_map):
     df["Equipo"] = df["Equipo"].replace(name_map)
     return df
 
+def transpose_df(df):
+    transposed = df.set_index(df.columns[0]).T
+    transposed.index.name = None  # optional: remove "name" of index
+    return transposed.reset_index().rename(columns={"index": df.columns[0]})
+
 # --- Scrape actual standings from ESPN ---
 @st.cache_data
 def fetch_actual_standings():
@@ -76,27 +81,30 @@ def evaluate_predictions(preds_df, rankings_df):
     return summary, merged
 
 # --- Streamlit UI ---
-st.title("⚽ Predicciónes de la Liga Hypermotion")
-st.write("Sube tus Predicciónes para ver cómo de exactas han sido.")
+st.title("⚽ Predicciones de la Liga Hypermotion")
+st.write("Sube tus Predicciones para ver cómo de exactas han sido.")
+st.session_state['language'] = 'es'
 
-uploaded_file = st.file_uploader("Sube tus Predicciónes.csv", type="csv")
+uploaded_file = st.file_uploader("Sube tus Predicciones.csv", type="csv")
 
 if uploaded_file:
     predictions_df = pd.read_csv(uploaded_file)
     predictions_df = normalize_team_names(predictions_df, team_name_map)
 
-    st.subheader("📥 Tus Predicciónes:")
-    st.dataframe(predictions_df)
+    st.subheader("📥 Tus Predicciones:")
+    # st.dataframe(predictions_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
+    pivoted_df = predictions_df.pivot(index="Predicción", columns="Nombre", values="Equipo")
+    st.dataframe(pivoted_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
 
     st.subheader("📡 Obteniendo la clasificación de La Liga Hypermotion...")
     actual_standings_df = fetch_actual_standings()
 
     actual_standings_df = normalize_team_names(actual_standings_df, team_name_map)
-    st.dataframe(actual_standings_df)
+    st.dataframe(actual_standings_df.drop(columns=["Posición"]).reset_index(drop=True).rename_axis("Posición").rename(lambda x: x + 1))
 
     st.subheader("🏁 Evaluación de Resultados")
     summary_df, detailed_df = evaluate_predictions(predictions_df, actual_standings_df)
-    st.dataframe(summary_df.sort_values("Ranking exacto"))
+    st.dataframe(summary_df.sort_values("Ranking exacto").reset_index(drop=True).rename_axis("Posición").rename(lambda x: x + 1))
 
     st.subheader("🔎 Comparativa Detallada")
     st.dataframe(detailed_df.sort_values(["Nombre", "Posición"]))
