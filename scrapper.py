@@ -29,10 +29,14 @@ def fetch_actual_standings():
         if len(teams) == 9:
             suffix_index = suffix_index + 1
         teams.append(row.text[suffix_index:])
+        img_tag = row.find("img")
+        if img_tag:
+            badges.append(img_tag["src"])
 
     df = pd.DataFrame({
         "Equipo": teams,
-        "Posición": range(1, len(teams) + 1)
+        "Posición": range(1, len(teams) + 1),
+        "Escudo": badges
     })
 
     return df

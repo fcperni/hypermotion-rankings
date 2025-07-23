@@ -14,16 +14,16 @@ if uploaded_file:
     predictions_df = pd.read_csv(uploaded_file)
     predictions_df = utils.normalize_team_names(predictions_df)
 
-    st.subheader("📥 Predicciones:")
+    st.subheader("📥 Predicciones")
     # st.dataframe(predictions_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
     pivoted_df = predictions_df.pivot(index="Predicción", columns="Nombre", values="Equipo")
     st.dataframe(pivoted_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
 
-    st.subheader("📡 Clasificación de La Liga Hypermotion...")
+    st.subheader("📡 Clasificación de La Liga Hypermotion")
     actual_standings_df = scrapper.fetch_actual_standings()
 
     actual_standings_df = utils.normalize_team_names(actual_standings_df)
-    st.table(actual_standings_df.drop(columns=["Posición"]).reset_index(drop=True).rename_axis("Posición").rename(lambda x: x + 1))
+    st.dataframe(actual_standings_df.drop(columns=["Posición"]).reset_index(drop=True).rename_axis("Posición").rename(lambda x: x + 1))
 
     st.subheader("🏁 Evaluación de Resultados")
     summary_df, detailed_df = predictor.evaluate_predictions(predictions_df, actual_standings_df)
