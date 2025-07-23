@@ -1,8 +1,8 @@
 
 def evaluate_predictions(predictions_df, rankings_df):
     merged = predictions_df.merge(rankings_df, on="Equipo", how="left")
-    merged["Posiciones exactas"] = merged["Predicción"] == merged["Posición"]
-    merged["Error absoluto"] = abs(merged["Predicción"] - merged["Posición"])
+    merged["Posiciones exactas"] = merged["Predicción"] == merged["Posicion"]
+    merged["Error absoluto"] = abs(merged["Predicción"] - merged["Posicion"])
 
     summary = merged.groupby("Nombre").agg({
         "Posiciones exactas": "sum",
