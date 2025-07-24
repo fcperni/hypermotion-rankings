@@ -1,7 +1,9 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
-import utils, scrapper, predictor
+import predictor
+import scrapper
+import utils
 
 # --- Streamlit UI ---
 st.title("⚽ Predicciones de la Liga Hypermotion")
@@ -15,13 +17,11 @@ if uploaded_file:
     predictions_df = utils.normalize_team_names(predictions_df)
 
     st.subheader("📥 Predicciones")
-    # st.dataframe(predictions_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
     pivoted_df = predictions_df.pivot(index="Predicción", columns="Nombre", values="Equipo")
     st.dataframe(pivoted_df.reset_index(drop=True).rename_axis("#").rename(lambda x: x + 1))
 
     st.subheader("📡 Clasificación de La Liga Hypermotion")
     actual_standings_df = scrapper.fetch_actual_standings()
-
     actual_standings_df = utils.normalize_team_names(actual_standings_df)
 
     for _, row in actual_standings_df.iterrows():
