@@ -35,4 +35,6 @@ if uploaded_file:
     st.dataframe(summary_df.sort_values("Ranking exacto").reset_index(drop=True).rename_axis("Posicion").rename(lambda x: x + 1))
 
     st.subheader("🔎 Comparativa Detallada")
-    st.dataframe(detailed_df.sort_values(["Nombre", "Posicion"]).reset_index(drop=True).rename_axis("Posicion"))
+    st.dataframe(detailed_df.sort_values(["Nombre", "Posicion"]), column_order=["Nombre", "Equipo", "Predicción",
+                                                                                "Posicion", "Posición exacta",
+                                                                                "Error absoluto"], hide_index=True)
